@@ -60,9 +60,9 @@ function getWindowPosition() {
   );
   let y;
   if (trayBounds.y == 0) {
-    y = Math.round(trayBounds.y + trayBounds.height + 3);
+    y = Math.round(trayBounds.y + trayBounds.height);
   } else {
-    y = Math.round(trayBounds.y - windowBounds.height - 3);
+    y = Math.round(trayBounds.y - windowBounds.height);
   }
   return { x, y };
 }
@@ -95,6 +95,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
+
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -109,7 +110,7 @@ app.on('ready', async () => {
     frame: false,
     fullscreenable: false,
     resizable: false,
-    transparent: false
+    transparent: true
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -143,8 +144,8 @@ app.on('ready', async () => {
     }
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-  menuBuilder.buildMenu();
+
+  
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
