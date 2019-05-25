@@ -1,0 +1,4 @@
+{
+    "HN_TOP": "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty",
+    "HN_NEW": "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
+}

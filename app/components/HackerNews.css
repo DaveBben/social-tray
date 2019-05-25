@@ -1,0 +1,22 @@
+.container {
+  background-color: #fdfdfd;
+  height: 100%;
+  color: black;
+  overflow-y: auto;
+}
+
+.container ul {
+    /* margin: 0; */
+    margin-left: 0px;
+    padding-left: 0px;
+   
+}
+
+.article {
+  padding-left: 10px;
+  margin-bottom: 5px;
+}
+
+.container a {
+  font-size: 1.4rem;
+}

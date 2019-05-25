@@ -2,19 +2,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import routes from '../constants/routes';
-import styles from './Home.css';
+import styles from './Navbar.css';
 
 type Props = {};
-
-export default class Home extends Component<Props> {
+class Navbar extends React.Component<Props> {
   props: Props;
 
   render() {
     return (
       <div className={styles.container} data-tid="container">
-        <h2>Home</h2>
-        <Link to={routes.COUNTER}>to Counter</Link>
+        <Link to={routes.HN}>Hacker News</Link>
+        <Link to={routes.REDDIT}>Reddit</Link>
+        <Link to={routes.TWITTER}>Twitter</Link>
       </div>
     );
   }
 }
+
+export default Navbar;
