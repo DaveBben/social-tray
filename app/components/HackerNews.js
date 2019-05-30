@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styles from './HackerNews.css';
 import API_URLS from '../constants/api';
 
-type Props = {};
 
 type Story = {
   by: string,
@@ -23,7 +22,6 @@ type State = {
 };
 
 export default class HackerNews extends Component<Props, State> {
-  props: Props;
 
   state = {
     stories: []

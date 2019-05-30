@@ -15,6 +15,11 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
+const Store = require('electron-store');
+const request = require('request');
+
+const store = new Store();
+
 const path = require('path');
 
 export default class AppUpdater {
@@ -26,6 +31,7 @@ export default class AppUpdater {
 }
 
 let mainWindow = null;
+let authWindow = null;
 let tray = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -79,7 +85,79 @@ function toggleWindow() {
     mainWindow.hide();
   } else {
     showWindow();
+    createRedditAuthWindow();
   }
+}
+
+function getRedditTokens(code) {
+  return new Promise((resolve, reject) => {
+    const postData = {
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: 'https://www.bennettnotes.com/'
+    };
+
+    const clientID = '9s9ELesX6kP6_Q';
+    const secret = 'ZBCT0hQ4rJZpxcCrpBX_5YZgJ-w';
+
+    const url = 'https://www.reddit.com/api/v1/access_token';
+    const options = {
+      auth: {
+        user: clientID,
+        pass: secret
+      },
+      method: 'post',
+      form: postData,
+      json: true,
+      url
+    };
+    request(options, function(err, res, body) {
+      if (err) {
+        reject(err);
+      }
+      const { access_token, refresh_token, expires_in } = body;
+      resolve({ access_token, refresh_token, expires_in });
+    });
+  });
+}
+
+/**
+ * Source: https://www.manos.im/blog/electron-oauth-with-github/
+ * @param {*} url
+ */
+function handleCallback(site, url) {
+  const raw_code = /code=([^&]*)/.exec(url) || null;
+  const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+  const error = /\?error=(.+)$/.exec(url);
+
+  if (code || error) {
+    // Close the browser if code found or error
+    authWindow.destroy();
+  }
+
+  // If there is a code, proceed to get token from github
+  if (code) {
+    getRedditTokens(code).then((config) => {
+      store.set('reddit', config);
+      console.log(store.get('reddit'));
+    });
+  } else if (error) {
+    alert(
+      "Oops! Something went wrong and we couldn't" +
+        'log you in. Please try again.'
+    );
+  }
+}
+
+function createRedditAuthWindow() {
+  // Should propbably not hardcode this
+  authWindow.loadURL(
+    'https://www.reddit.com/api/v1/authorize?client_id=9s9ELesX6kP6_Q&response_type=code&redirect_uri=https://www.bennettnotes.com/&duration=permanent&scope=read&state=bacoonia'
+  );
+  authWindow.show();
+  authWindow.webContents.on('will-redirect', function(event, url) {
+    handleCallback('reddit', url);
+  });
 }
 
 /**
@@ -95,7 +173,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', async () => {
-
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'
@@ -144,10 +221,20 @@ app.on('ready', async () => {
     }
   });
 
-
-  
-
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
   new AppUpdater();
+
+  // Auth Windows
+  authWindow = new BrowserWindow({
+    show: false,
+    height: 600,
+    width: 800,
+    alwaysOnTop: true,
+    webPreferences: {
+      nodeIntegration: false
+    }
+  });
+
+  authWindow.setResizable(false);
 });
