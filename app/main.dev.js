@@ -33,6 +33,7 @@ export default class AppUpdater {
 
 let mainWindow = null;
 let authWindow = null;
+let settingsWindows = null;
 let tray = null;
 
 if (process.env.NODE_ENV === 'production') {
@@ -67,7 +68,7 @@ function getWindowPosition() {
   );
   let y;
   if (trayBounds.y == 0) {
-    y = Math.round(trayBounds.y + trayBounds.height+ 8);
+    y = Math.round(trayBounds.y + trayBounds.height + 8);
   } else {
     y = Math.round(trayBounds.y - windowBounds.height - 15);
   }
@@ -160,6 +161,11 @@ function createRedditAuthWindow() {
   });
 }
 
+function showSettingsWindow() {
+  settingsWindows.show();
+  settingsWindows.loadURL(`file://${__dirname}/settings.html`);
+}
+
 /**
  * Add event listeners...
  */
@@ -202,7 +208,13 @@ app.on('ready', async () => {
 
   tray = new Tray(path.normalize(`${__dirname}/assets/triangle.png`));
   const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' }
+    {
+      label: 'Settings',
+      type: 'normal',
+      click: () => {
+        showSettingsWindow();
+      }
+    }
   ]);
   tray.setToolTip('This is my application.');
   tray.setContextMenu(contextMenu);
@@ -234,6 +246,14 @@ app.on('ready', async () => {
     webPreferences: {
       nodeIntegration: false
     }
+  });
+
+  // Settings Windows
+  settingsWindows = new BrowserWindow({
+    show: false,
+    height: 600,
+    width: 800,
+    alwaysOnTop: true
   });
 
   authWindow.setResizable(false);

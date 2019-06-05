@@ -62,6 +62,7 @@
       "app/assets/",
       "app/dist/",
       "app/app.html",
+      "app/settings.html",
       "app/main.prod.js",
       "app/main.prod.js.map",
       "package.json"
@@ -257,6 +258,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.8.1",
+    "bootstrap": "4.3.1",
     "connected-react-router": "^6.3.2",
     "core-js": "2",
     "devtron": "^1.4.0",

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Settings</title>
+    <script>
+        (function() {
+          if (!process.env.HOT) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = './dist/settings.css';
+            // HACK: Writing the script path should be done with webpack
+            document.getElementsByTagName('head')[0].appendChild(link);
+          }
+        })();
+      </script>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <button type="button" class="btn btn-primary">Primary</button>
+</body>
+</html>
