@@ -19,6 +19,7 @@ const Store = require('electron-store');
 const request = require('request');
 
 const store = new Store();
+console.log(app.getPath('userData'));
 
 const path = require('path');
 
@@ -66,9 +67,9 @@ function getWindowPosition() {
   );
   let y;
   if (trayBounds.y == 0) {
-    y = Math.round(trayBounds.y + trayBounds.height);
+    y = Math.round(trayBounds.y + trayBounds.height+ 8);
   } else {
-    y = Math.round(trayBounds.y - windowBounds.height);
+    y = Math.round(trayBounds.y - windowBounds.height - 15);
   }
   return { x, y };
 }
@@ -85,7 +86,6 @@ function toggleWindow() {
     mainWindow.hide();
   } else {
     showWindow();
-    createRedditAuthWindow();
   }
 }
 
@@ -137,7 +137,7 @@ function handleCallback(site, url) {
 
   // If there is a code, proceed to get token from github
   if (code) {
-    getRedditTokens(code).then((config) => {
+    getRedditTokens(code).then(config => {
       store.set('reddit', config);
       console.log(store.get('reddit'));
     });

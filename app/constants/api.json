@@ -1,4 +1,7 @@
 {
     "HN_TOP": "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty",
-    "HN_NEW": "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty"
+    "HN_NEW": "https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty",
+    "REDDIT_APPLICATION_URL": "https://www.reddit.com/api/v1/access_token",
+    "REDDIT_URL": "https://oauth.reddit.com/r/"
+
 }

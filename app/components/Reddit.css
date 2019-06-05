@@ -1,16 +1,19 @@
 .container {
+ 
   height: 100%;
-  overflow-y: auto;
+  color: white;
   padding: 10px;
+  overflow-y: auto;
 }
 
 
 
+
 .container hr{
-  border-width: 0.25px;
-  border-color: #80808017;
- 
- }
+ border-width: 0.25px;
+ border-color: #80808017;
+
+}
 
 .container ul {
     /* margin: 0; */

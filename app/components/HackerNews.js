@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import styles from './HackerNews.css';
 import API_URLS from '../constants/api';
 
+const Store = require('electron-store');
+
+let store = null;
 
 type Story = {
   by: string,
@@ -22,12 +25,22 @@ type State = {
 };
 
 export default class HackerNews extends Component<Props, State> {
-
   state = {
     stories: []
   };
 
   componentDidMount() {
+    console.log('mounted HN');
+    store = new Store();
+    if (!store.get('hn_posts')) {
+      this.grabStories();
+    } else {
+      console.log('loading from cache');
+      this.setState({ stories: store.get('hn_posts') });
+    }
+  }
+
+  grabStories = () => {
     const storyPromises = fetch(API_URLS.HN_TOP)
       .then(response => response.json())
       .then((json: Array<number>) => {
@@ -49,13 +62,14 @@ export default class HackerNews extends Component<Props, State> {
 
     storyPromises
       .then(data => {
-        return this.setState({ stories: data });
+        this.setState({ stories: data });
+        return store.set('hn_posts', data);
       })
       .catch(error => {
         console.log(error);
         return new Error('Could not retrieve stories');
       });
-  }
+  };
 
   render() {
     return (
